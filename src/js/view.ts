@@ -2,7 +2,7 @@ import { COLORS } from './constants';
 
 export default class View {
     SQUARESIZE: number = 20;
-    context: CanvasRenderingContext2D;
+    ctx: CanvasRenderingContext2D;
 
     constructor() {
         const canvas = document.getElementById('tetris');
@@ -10,26 +10,27 @@ export default class View {
         if (!(canvas instanceof HTMLCanvasElement))
             throw new Error('Expected canvas to be an HTMLCanvasElement');
 
-        const context = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
 
-        if (!context)
-            throw new Error('canvas.getContext() failed unexpectedly');
+        if (!ctx) throw new Error('canvas.getContext() failed unexpectedly');
 
-        this.context = context;
+        this.ctx = ctx;
     }
 
     drawSquare(x: number, y: number, color: string): void {
-        this.context.fillStyle = color;
-        this.context.fillRect(
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(
             x * this.SQUARESIZE,
             y * this.SQUARESIZE,
             this.SQUARESIZE,
             this.SQUARESIZE,
         );
-        this.context.strokeStyle = 'black';
-        this.context.strokeRect(
-            x * this.SQUARESIZE,
-            y * this.SQUARESIZE,
+        this.ctx.strokeStyle = color === 'black' ? 'black' : 'white';
+        this.ctx.lineWidth = 3;
+        this.ctx.lineJoin = 'bevel';
+        this.ctx.strokeRect(
+            x * this.SQUARESIZE + 1,
+            y * this.SQUARESIZE + 1,
             this.SQUARESIZE,
             this.SQUARESIZE,
         );

@@ -4,6 +4,7 @@ import View from './view';
 export default class Controller {
     game: Game;
     view: View;
+    intervalId: number | null = null;
 
     constructor(game: Game, view: View) {
         this.game = game;
@@ -12,6 +13,7 @@ export default class Controller {
         document.addEventListener('keyup', this.onKeyUp.bind(this));
 
         this.updateView();
+        this.startTimer();
     }
 
     onKeyDown(event: KeyboardEvent) {
@@ -33,7 +35,8 @@ export default class Controller {
                 break;
             case 'ArrowUp':
                 event.preventDefault();
-                console.log('ArrowUp');
+                this.game.rotatePiece();
+                this.updateView();
                 break;
             default:
         }
@@ -45,5 +48,20 @@ export default class Controller {
         const state = this.game.getState();
 
         this.view.renderBoard(state.board);
+    }
+
+    startTimer() {
+        const speed = 1000;
+
+        if (!this.intervalId) {
+            this.intervalId = setInterval(() => {
+                this.tick();
+            }, speed);
+        }
+    }
+
+    tick() {
+        this.game.movePieceDown();
+        this.updateView();
     }
 }
