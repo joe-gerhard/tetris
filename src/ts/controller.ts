@@ -13,7 +13,9 @@ export default class Controller {
         this.view = view;
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
+    }
 
+    init() {
         this.view.renderStartScreen();
     }
 
