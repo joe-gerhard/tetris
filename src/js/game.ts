@@ -1,11 +1,10 @@
+import { COLUMNS, ROWS } from './constants';
 import Piece, { Tetromino } from './piece';
 
 export default class Game {
-    ROW: number = 20;
-    COLUMN: number = 10;
-    VACANT: number = 0;
     board: number[][] = [];
     activePiece: Piece = this.createPiece();
+    topOut: boolean = false;
 
     constructor() {
         this.initialize();
@@ -14,15 +13,16 @@ export default class Game {
     initialize() {
         this.board = this.createBoard();
         this.activePiece = this.createPiece();
+        this.topOut = false;
     }
 
     createBoard(): number[][] {
         let board: number[][] = [];
 
-        for (let y = 0; y < this.ROW; y++) {
+        for (let y = 0; y < ROWS; y++) {
             board[y] = [];
-            for (let x = 0; x < this.COLUMN; x++) {
-                board[y][x] = this.VACANT;
+            for (let x = 0; x < COLUMNS; x++) {
+                board[y][x] = 0;
             }
         }
         return board;
@@ -53,6 +53,7 @@ export default class Game {
         // Return the result
         return {
             board: tempBoard,
+            isGameOver: this.topOut,
         };
     }
 
@@ -85,6 +86,10 @@ export default class Game {
             this.lockPiece();
             this.clearRows();
             this.activePiece = this.createPiece();
+        }
+
+        if (this.hasCollision()) {
+            this.topOut = true;
         }
     }
 
@@ -147,7 +152,7 @@ export default class Game {
             if (!this.board[y].includes(0)) {
                 // Remove the full row and add an empty row at the top
                 tempBoard.splice(y, 1);
-                tempBoard.unshift(Array(this.COLUMN).fill(0));
+                tempBoard.unshift(Array(COLUMNS).fill(0));
             }
         }
         // Set the current board to the new mutated board

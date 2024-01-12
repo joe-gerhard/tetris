@@ -4,6 +4,7 @@ import View from './view';
 export default class Controller {
     game: Game;
     view: View;
+    isPlaying: boolean = false;
     intervalId: number | null = null;
 
     constructor(game: Game, view: View) {
@@ -12,42 +13,77 @@ export default class Controller {
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
 
-        this.updateView();
-        this.startTimer();
+        this.view.renderStartScreen();
     }
 
     onKeyDown(event: KeyboardEvent) {
         switch (event.key) {
+            case 's':
             case 'ArrowDown':
                 event.preventDefault();
-                this.game.movePieceDown();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.movePieceDown();
+                    this.updateView();
+                }
                 break;
+            case 'a':
             case 'ArrowLeft':
                 event.preventDefault();
-                this.game.movePieceLeft();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.movePieceLeft();
+                    this.updateView();
+                }
                 break;
+            case 'd':
             case 'ArrowRight':
                 event.preventDefault();
-                this.game.movePieceRight();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.movePieceRight();
+                    this.updateView();
+                }
                 break;
+            case 'w':
             case 'ArrowUp':
                 event.preventDefault();
-                this.game.rotatePiece();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.rotatePiece();
+                    this.updateView();
+                }
+                break;
+            case ' ':
+                event.preventDefault();
+                const { isGameOver } = this.game.getState();
+
+                if (isGameOver) this.reset();
+                else if (this.isPlaying) this.pause();
+                else this.play();
                 break;
             default:
         }
     }
 
-    onKeyUp(event: KeyboardEvent) {}
+    onKeyUp(event: KeyboardEvent) {
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                if (this.isPlaying) this.startTimer();
+                break;
+            default:
+        }
+    }
 
     updateView() {
-        const state = this.game.getState();
+        const { board, isGameOver } = this.game.getState();
 
-        this.view.renderBoard(state.board);
+        this.view.renderBoard(board);
+
+        if (isGameOver) {
+            this.isPlaying = false;
+            this.stopTimer();
+            this.view.renderGameOver();
+        } else if (!this.isPlaying) {
+            this.view.renderPauseScreen();
+        }
     }
 
     startTimer() {
@@ -60,8 +96,32 @@ export default class Controller {
         }
     }
 
+    stopTimer() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+
     tick() {
         this.game.movePieceDown();
+        this.updateView();
+    }
+
+    reset() {
+        this.game.initialize();
+        this.play();
+    }
+
+    play() {
+        this.isPlaying = true;
+        this.startTimer();
+        this.updateView();
+    }
+
+    pause() {
+        this.isPlaying = false;
+        this.stopTimer();
         this.updateView();
     }
 }
