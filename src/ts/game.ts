@@ -32,6 +32,7 @@ export default class Game {
         this.topOut = false;
         this.topScore = Math.max(this.score, this.topScore);
         this.score = 0;
+        this.level = 1;
     }
 
     createBoard(): number[][] {

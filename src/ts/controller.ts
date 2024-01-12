@@ -130,6 +130,7 @@ export default class Controller {
 
     reset() {
         this.game.initialize();
+        this.currentLevel = 1;
         this.play();
     }
 
