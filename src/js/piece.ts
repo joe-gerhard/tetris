@@ -8,7 +8,7 @@ export enum Tetromino {
     Z = 'Z',
 }
 
-const TETROMINOES = {
+export const TETROMINOES = {
     I: [
         [0, 0, 0, 0],
         [1, 1, 1, 1],
@@ -16,20 +16,18 @@ const TETROMINOES = {
         [0, 0, 0, 0],
     ],
     J: [
-        [2, 0, 0],
         [2, 2, 2],
+        [0, 0, 2],
         [0, 0, 0],
     ],
     L: [
-        [0, 0, 3],
         [3, 3, 3],
+        [3, 0, 0],
         [0, 0, 0],
     ],
     O: [
-        [0, 0, 0, 0],
-        [0, 4, 4, 0],
-        [0, 4, 4, 0],
-        [0, 0, 0, 0],
+        [4, 4],
+        [4, 4],
     ],
     S: [
         [0, 5, 5],
@@ -53,6 +51,7 @@ export default class Piece {
     blocks: number[][];
     x: number;
     y: number;
+    softDropScore: number = 0;
 
     constructor(tetromino: Tetromino) {
         this.tetromino = tetromino;

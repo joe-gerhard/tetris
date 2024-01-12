@@ -1,4 +1,4 @@
-import { COLUMNS, ROWS } from './constants';
+import { BASE_SCORES, COLUMNS, ROWS } from './constants';
 import Piece, { Tetromino } from './piece';
 
 export default class Game {
@@ -6,6 +6,19 @@ export default class Game {
     activePiece: Piece = this.createPiece();
     nextPiece: Piece = this.createPiece();
     topOut: boolean = false;
+    statistics = {
+        T: 0,
+        J: 0,
+        Z: 0,
+        O: 0,
+        S: 0,
+        L: 0,
+        I: 0,
+    };
+    lines: number = 0;
+    level: number = 1;
+    score: number = 0;
+    topScore: number = 0;
 
     constructor() {
         this.initialize();
@@ -15,7 +28,10 @@ export default class Game {
         this.board = this.createBoard();
         this.nextPiece = this.createPiece();
         this.activePiece = this.createPiece();
+        this.countPiece(this.activePiece);
         this.topOut = false;
+        this.topScore = Math.max(this.score, this.topScore);
+        this.score = 0;
     }
 
     createBoard(): number[][] {
@@ -38,6 +54,10 @@ export default class Game {
         return new Piece(Tetromino[key as keyof typeof Tetromino]);
     }
 
+    countPiece({ tetromino }: Piece): void {
+        this.statistics[tetromino]++;
+    }
+
     getState() {
         // Copy current board state to temp board
         const tempBoard = this.copyBoard();
@@ -56,6 +76,11 @@ export default class Game {
         return {
             board: tempBoard,
             isGameOver: this.topOut,
+            statistics: this.statistics,
+            score: this.score,
+            topScore: this.topScore,
+            lines: this.lines,
+            level: this.level,
         };
     }
 
@@ -81,19 +106,29 @@ export default class Game {
         if (this.hasCollision()) this.activePiece.x -= 1;
     }
 
-    movePieceDown() {
+    movePieceDown(isHoldingDown: boolean = false) {
+        // Move the piece down one unit
         this.activePiece.y += 1;
+        // If the player has pressed the down button they get extra points
+        if (isHoldingDown) this.incrementSoftDropScore();
+        // Once the piece hits the bottom, lock it in place and create a new piece
         if (this.hasCollision()) {
             this.activePiece.y -= 1;
             this.lockPiece();
             this.clearRows();
             this.activePiece = this.nextPiece;
+            this.countPiece(this.nextPiece);
             this.nextPiece = this.createPiece();
         }
 
+        // If there is still a collision at this point, the player has topped out
         if (this.hasCollision()) {
             this.topOut = true;
         }
+    }
+
+    incrementSoftDropScore() {
+        this.activePiece.softDropScore++;
     }
 
     rotatePiece() {
@@ -148,6 +183,7 @@ export default class Game {
     clearRows() {
         // Start with a clone of the real board so we can mutate it freely
         let tempBoard: number[][] = this.copyBoard();
+        let clearedRows: number = 0;
 
         // Check every row for 0's
         for (let y = 0; y < this.board.length; y++) {
@@ -156,9 +192,22 @@ export default class Game {
                 // Remove the full row and add an empty row at the top
                 tempBoard.splice(y, 1);
                 tempBoard.unshift(Array(COLUMNS).fill(0));
+
+                // Count the cleared row for scoring purposes
+                clearedRows++;
             }
         }
         // Set the current board to the new mutated board
         this.board = tempBoard;
+
+        // Calulate the score
+        let baseScore = BASE_SCORES[clearedRows];
+        let lineScore = baseScore * (this.level + 1);
+        let totalScore = lineScore + this.activePiece.softDropScore;
+
+        this.lines += clearedRows;
+        this.score += totalScore;
+
+        if (this.lines >= this.level * 10) this.level++;
     }
 }

@@ -6,6 +6,7 @@ export default class Controller {
     view: View;
     isPlaying: boolean = false;
     intervalId: number | null = null;
+    currentLevel: number = 1;
 
     constructor(game: Game, view: View) {
         this.game = game;
@@ -22,7 +23,7 @@ export default class Controller {
             case 'ArrowDown':
                 event.preventDefault();
                 if (this.isPlaying) {
-                    this.game.movePieceDown();
+                    this.game.movePieceDown(true);
                     this.updateView();
                 }
                 break;
@@ -64,19 +65,31 @@ export default class Controller {
 
     onKeyUp(event: KeyboardEvent) {
         switch (event.key) {
+            case 's':
             case 'ArrowDown':
                 event.preventDefault();
-                if (this.isPlaying) this.startTimer();
                 break;
             default:
         }
     }
 
     updateView() {
-        const { board, isGameOver } = this.game.getState();
+        const { board, isGameOver, statistics, score, topScore, lines, level } =
+            this.game.getState();
 
+        // Force timer to update on level up
+        if (level > this.currentLevel) {
+            this.stopTimer();
+            this.startTimer();
+            this.currentLevel = level;
+        }
+
+        this.view.updateLinesCount(lines);
+        this.view.updateLevel(level);
         this.view.renderBoard(board);
         this.view.renderNextPanel(this.game.nextPiece);
+        this.view.renderStatisticsPanel(statistics);
+        this.view.renderScorePanel(topScore, score);
 
         if (isGameOver) {
             this.isPlaying = false;
@@ -88,12 +101,16 @@ export default class Controller {
     }
 
     startTimer() {
-        const speed = 1000;
+        const speed = 1000 / this.game.level;
+        console.log(speed);
 
         if (!this.intervalId) {
-            this.intervalId = setInterval(() => {
-                this.tick();
-            }, speed);
+            this.intervalId = setInterval(
+                () => {
+                    this.tick();
+                },
+                speed > 50 ? speed : 50,
+            );
         }
     }
 

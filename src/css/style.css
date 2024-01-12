@@ -24,6 +24,32 @@ canvas {
     border: 8px solid white;
 }
 
+#statistics {
+    align-self: flex-end;
+}
+
+#score {
+    align-self: flex-start;
+}
+
+#next {
+    margin-top: auto;
+}
+
+#lines {
+    border: 8px solid white;
+    font-size: 48px;
+    text-align: center;
+}
+
+#level {
+    border: 8px solid white;
+    font-size: 48px;
+    line-height: 0.8em;
+    text-align: center;
+    margin-bottom: auto;
+}
+
 h1 {
     font-size: 8rem;
 }
@@ -50,5 +76,10 @@ h1 > span:nth-child(6) {
 .container {
     display: flex;
     gap: 0.5rem;
-    align-items: center;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }

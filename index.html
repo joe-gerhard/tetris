@@ -16,9 +16,21 @@
             <span>S</span>
         </h1>
         <div class="container">
-            <canvas id="summary"></canvas>
-            <canvas id="board"></canvas>
-            <canvas id="next"></canvas>
+            <canvas id="statistics"></canvas>
+            <div class="column">
+                <div id="lines">
+                    <span>LINES-</span><span id="lines-count">000</span>
+                </div>
+                <canvas id="board"></canvas>
+            </div>
+            <div class="column">
+                <canvas id="score"></canvas>
+                <canvas id="next"></canvas>
+                <div id="level">
+                    <div>LEVEL</div>
+                    <div id="level-count">00</div>
+                </div>
+            </div>
         </div>
         <script type="module" src="/src/js/main.ts"></script>
     </body>
