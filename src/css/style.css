@@ -17,6 +17,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: black;
+    color: white;
 }
 
 canvas {
@@ -44,4 +45,10 @@ h1 > span:nth-child(5) {
 }
 h1 > span:nth-child(6) {
     color: hsl(50 50% 50%);
+}
+
+.container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }

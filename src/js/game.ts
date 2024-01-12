@@ -4,6 +4,7 @@ import Piece, { Tetromino } from './piece';
 export default class Game {
     board: number[][] = [];
     activePiece: Piece = this.createPiece();
+    nextPiece: Piece = this.createPiece();
     topOut: boolean = false;
 
     constructor() {
@@ -12,6 +13,7 @@ export default class Game {
 
     initialize() {
         this.board = this.createBoard();
+        this.nextPiece = this.createPiece();
         this.activePiece = this.createPiece();
         this.topOut = false;
     }
@@ -85,7 +87,8 @@ export default class Game {
             this.activePiece.y -= 1;
             this.lockPiece();
             this.clearRows();
-            this.activePiece = this.createPiece();
+            this.activePiece = this.nextPiece;
+            this.nextPiece = this.createPiece();
         }
 
         if (this.hasCollision()) {

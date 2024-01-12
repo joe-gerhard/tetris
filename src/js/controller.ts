@@ -76,6 +76,7 @@ export default class Controller {
         const { board, isGameOver } = this.game.getState();
 
         this.view.renderBoard(board);
+        this.view.renderNextPanel(this.game.nextPiece);
 
         if (isGameOver) {
             this.isPlaying = false;
