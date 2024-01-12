@@ -19,15 +19,15 @@ export default class View {
         this.ctx = ctx;
     }
 
-    drawSquare(x: number, y: number, color: string): void {
-        this.ctx.fillStyle = color;
+    drawSquare(x: number, y: number, color: number): void {
+        this.ctx.fillStyle = this.getColor(color);
         this.ctx.fillRect(
             x * SQUARESIZE,
             y * SQUARESIZE,
             SQUARESIZE,
             SQUARESIZE,
         );
-        this.ctx.strokeStyle = color === 'black' ? 'black' : 'black';
+        this.ctx.strokeStyle = color ? this.getColor(color + 2) : 'black';
         this.ctx.lineWidth = 3;
         this.ctx.lineJoin = 'bevel';
         this.ctx.strokeRect(
@@ -41,15 +41,14 @@ export default class View {
     renderBoard(board: number[][]) {
         for (let y = 0; y < board.length; y++) {
             for (let x = 0; x < board[y].length; x++) {
-                const color = this.getColor(board[y][x]);
-                this.drawSquare(x, y, color);
+                this.drawSquare(x, y, board[y][x]);
             }
         }
     }
 
     getColor(c: number): string {
         if (c === 0) return 'black';
-        return `hsl(${c * 4} ${c * 5 + 50}% ${c * 9 + 10}%)`;
+        return `hsl(${c * 4} ${c * 5 + 50}% ${c * 5 + 20}%)`;
     }
 
     renderGameOver() {
@@ -57,11 +56,11 @@ export default class View {
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         this.ctx.fillStyle = 'white';
-        this.ctx.font = '24px arial';
+        this.ctx.font = '32px VT323';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText('Game Over', WIDTH / 2, HEIGHT / 2 - 48);
-        this.ctx.font = '16px arial';
+        this.ctx.font = '24px VT323';
         this.ctx.fillText('Press Space to Play Again', WIDTH / 2, HEIGHT / 2);
     }
 
@@ -70,11 +69,11 @@ export default class View {
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         this.ctx.fillStyle = 'white';
-        this.ctx.font = '24px arial';
+        this.ctx.font = '32px VT323';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText('PAUSED', WIDTH / 2, HEIGHT / 2 - 48);
-        this.ctx.font = '16px arial';
+        this.ctx.font = '24px VT323';
         this.ctx.fillText('Press Space to Resume', WIDTH / 2, HEIGHT / 2);
     }
 
@@ -83,7 +82,7 @@ export default class View {
         this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         this.ctx.fillStyle = 'white';
-        this.ctx.font = '16px arial';
+        this.ctx.font = '24px VT323';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText('Press SPACE to Start', WIDTH / 2, HEIGHT / 2 - 48);

@@ -1,16 +1,32 @@
+@font-face {
+    font-family: 'VT323';
+    src: url('../resources/fonts/VT323-Regular.ttf');
+}
+
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+    font-family: 'VT323', monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: black;
 }
 
 canvas {
-  border: 1px solid black;
+    border: 8px solid white;
+}
+
+h1 {
+    font-size: 100px;
+    color: white;
+    letter-spacing: 0.25em;
+    text-align: center;
+    margin-left: 1.2rem;
 }
