@@ -24,9 +24,24 @@ canvas {
 }
 
 h1 {
-    font-size: 100px;
-    color: white;
-    letter-spacing: 0.25em;
-    text-align: center;
-    margin-left: 1.2rem;
+    font-size: 8rem;
+}
+
+h1 > span:nth-child(1) {
+    color: hsl(0 50% 50%);
+}
+h1 > span:nth-child(2) {
+    color: hsl(10 50% 50%);
+}
+h1 > span:nth-child(3) {
+    color: hsl(20 50% 50%);
+}
+h1 > span:nth-child(4) {
+    color: hsl(30 50% 50%);
+}
+h1 > span:nth-child(5) {
+    color: hsl(40 50% 50%);
+}
+h1 > span:nth-child(6) {
+    color: hsl(50 50% 50%);
 }
